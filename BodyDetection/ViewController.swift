@@ -6,72 +6,161 @@ The sample app's main view controller.
 */
 
 import UIKit
-import RealityKit
 import ARKit
-import Combine
+import RealityKit
 
-class ViewController: UIViewController, ARSessionDelegate {
-
+class ViewController: UIViewController {
     @IBOutlet var arView: ARView!
+    @IBOutlet weak var joints2DButton: UIButton!
+    @IBOutlet weak var joints3DButton: UIButton!
+    var warningLabel: UILabel!
     
-    // The 3D character to display.
-    var character: BodyTrackedEntity?
-    let characterOffset: SIMD3<Float> = [-1.0, 0, 0] // Offset the character by one meter to the left
-    let characterAnchor = AnchorEntity()
+    var jointDots2D = [CAShapeLayer]()
+    var jointDots3D = [Entity]()
+    let sphereAnchor = AnchorEntity()
+    
+    private var jointTrackWarning: String? {
+        didSet {
+            warningLabel.text = jointTrackWarning
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        addWarningLabel()
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         arView.session.delegate = self
-        
+
         // If the iOS device doesn't support body tracking, raise a developer error for
         // this unhandled case.
-        guard ARBodyTrackingConfiguration.isSupported else {
-            fatalError("This feature is only supported on devices with an A12 chip")
-        }
+//        guard ARBodyTrackingConfiguration.isSupported else {
+//            fatalError("This feature is only supported on devices with an A12 chip")
+//        }
+//
+//        // Run a body tracking configration.
+//        let configuration = ARBodyTrackingConfiguration()
+//        arView.session.run(configuration)
+        
+//        // 3D Skeleton
+//        arView.scene.addAnchor(sphereAnchor)
+    }
 
-        // Run a body tracking configration.
-        let configuration = ARBodyTrackingConfiguration()
-        arView.session.run(configuration)
-        
-        arView.scene.addAnchor(characterAnchor)
-        
-        // Asynchronously load the 3D character.
-        var cancellable: AnyCancellable? = nil
-        cancellable = Entity.loadBodyTrackedAsync(named: "character/robot").sink(
-            receiveCompletion: { completion in
-                if case let .failure(error) = completion {
-                    print("Error: Unable to load model: \(error.localizedDescription)")
-                }
-                cancellable?.cancel()
-        }, receiveValue: { (character: Entity) in
-            if let character = character as? BodyTrackedEntity {
-                // Scale the character to human size
-                character.scale = [1.0, 1.0, 1.0]
-                self.character = character
-                cancellable?.cancel()
-            } else {
-                print("Error: Unable to load model as BodyTrackedEntity")
-            }
-        })
+    @IBAction func showJoints2D(_ sender: Any) {
+        joints2DButton.isSelected = !joints2DButton.isSelected
     }
     
-    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        for anchor in anchors {
-            guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
+    @IBAction func showJoints3D(_ sender: Any) {
+        joints3DButton.isSelected = !joints3DButton.isSelected
+    }
+    
+    @IBAction func clearSkeleton(_ sender: Any) {
+        joints2DButton.isSelected = false
+        joints3DButton.isSelected = false
+    }
+}
+
+extension ViewController: ARSessionDelegate {
+    // Soft validation in 2D
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        let defaultDefinition = ARSkeletonDefinition.defaultBody2D
+        guard let skeleton = frame.detectedBody?.skeleton else { return }
+        
+        var untrackedJointsAvailable = false
+        var untrackedJoints = [String]()
+        hideJoints2D()
+
+        for jointName in defaultDefinition.jointNames {
+            // From documentation:
+            // ARKit names particular joints that are crucial to body tracking. You can access named joints by calling index(forJointName:) and passing in one of the available jointNames identifiers.
+            let jointIndex = defaultDefinition.index(for: ARSkeleton.JointName(rawValue: jointName))
             
-            // Update the position of the character anchor's position.
-            let bodyPosition = simd_make_float3(bodyAnchor.transform.columns.3)
-            characterAnchor.position = bodyPosition + characterOffset
-            // Also copy over the rotation of the body anchor, because the skeleton's pose
-            // in the world is relative to the body anchor's rotation.
-            characterAnchor.orientation = Transform(matrix: bodyAnchor.transform).rotation
-   
-            if let character = character, character.parent == nil {
-                // Attach the character to its anchor as soon as
-                // 1. the body anchor was detected and
-                // 2. the character was loaded.
-                characterAnchor.addChild(character)
+            if !skeleton.isJointTracked(jointIndex) {
+                untrackedJointsAvailable = true
+                untrackedJoints.append(jointName)
+            } else {
+                // If joint is tracked then draw it (but such option should also be enabled)
+                if joints2DButton.isSelected {
+                    drawJointPoint(with: jointIndex, from: skeleton, in: frame, color: UIColor.green)
+                }
             }
         }
+        
+        if !untrackedJointsAvailable {
+            jointTrackWarning = "Everything is fine!"
+        } else {
+            jointTrackWarning = "Untracked joints:\n" + untrackedJoints.joined(separator: "\n")
+        }
+    }
+    
+    // Soft validation in 3D
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        let defaultDefinition = ARSkeletonDefinition.defaultBody3D
+        for anchor in anchors {
+            guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
+
+            let bodyPosition = simd_make_float3(bodyAnchor.transform.columns.3)
+            let bodyOrientation = Transform(matrix: bodyAnchor.transform).rotation
+
+            hideJoints3D()
+
+            for jointName in defaultDefinition.jointNames {
+                if let transform = bodyAnchor.skeleton.modelTransform(for: ARSkeleton.JointName(rawValue: jointName)) {
+                    let position = bodyPosition + simd_make_float3(transform.columns.3)
+                    let newSphere = CustomSphere(color: .blue, radius: 0.025)
+                    newSphere.transform = Transform(scale: [1, 1, 1], rotation: bodyOrientation, translation: position)
+                    sphereAnchor.addChild(newSphere, preservingWorldTransform: true)
+                    jointDots3D.append(newSphere)
+                }
+            }
+        }
+    }
+}
+
+private extension ViewController {
+    func drawJointPoint(with index: Int, from skeleton: ARSkeleton2D, in frame: ARFrame, color: UIColor) {
+        let transform = frame.displayTransform(for: .portrait, viewportSize: arView.frame.size)
+        let normalizedCenter = CGPoint(x: CGFloat(skeleton.jointLandmarks[index][0]), y: CGFloat(skeleton.jointLandmarks[index][1])).applying(transform)
+        let center = normalizedCenter.applying(CGAffineTransform.identity.scaledBy(x: arView.frame.width, y: arView.frame.height))
+        let circleWidth: CGFloat = 10
+        let circleHeight: CGFloat = 10
+        let rect = CGRect(origin: CGPoint(x: center.x - circleWidth/2, y: center.y - circleHeight/2), size: CGSize(width: circleWidth, height: circleHeight))
+        let circleLayer = CAShapeLayer()
+        circleLayer.fillColor = color.cgColor
+        circleLayer.path = UIBezierPath(ovalIn: rect).cgPath
+        view.layer.addSublayer(circleLayer)
+        jointDots2D.append(circleLayer)
+    }
+
+    func hideJoints2D() {
+        jointDots2D.forEach {
+            $0.removeFromSuperlayer()
+        }
+        jointDots2D.removeAll()
+    }
+    
+    func hideJoints3D() {
+        jointDots3D.forEach {
+            $0.removeFromParent()
+        }
+        jointDots3D.removeAll()
+    }
+
+    func addWarningLabel() {
+        warningLabel = UILabel()
+        warningLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        warningLabel.textColor = .black
+        warningLabel.textAlignment = .center
+        warningLabel.backgroundColor = .white
+        warningLabel.numberOfLines = 0
+        warningLabel.lineBreakMode = .byWordWrapping
+        
+        view.addSubview(warningLabel)
+        warningLabel.translatesAutoresizingMaskIntoConstraints = false
+        warningLabel.widthAnchor.constraint(equalToConstant:  350).isActive = true
+        warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 60).isActive = true
     }
 }
