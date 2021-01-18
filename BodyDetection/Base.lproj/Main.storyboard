@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -69,6 +69,12 @@
                                     <action selector="clearSkeleton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mVA-h3-6fc"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body anchor presence:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Poi-Dk-Amf">
+                                <rect key="frame" x="122.5" y="134" width="169" height="18"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <color key="textColor" systemColor="systemBlueColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -76,12 +82,15 @@
                         <constraints>
                             <constraint firstItem="sDS-3y-JfY" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="4Ia-2v-q5R"/>
                             <constraint firstItem="sDS-3y-JfY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="542-LL-dxZ"/>
+                            <constraint firstItem="Poi-Dk-Amf" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="VNP-4f-OTb"/>
+                            <constraint firstItem="Poi-Dk-Amf" firstAttribute="top" secondItem="iUD-zC-GUn" secondAttribute="bottom" constant="10" id="a4K-g0-Wpt"/>
                             <constraint firstItem="iUD-zC-GUn" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="yGP-mk-psn"/>
                             <constraint firstItem="iUD-zC-GUn" firstAttribute="top" secondItem="sDS-3y-JfY" secondAttribute="bottom" constant="10" id="yzI-ct-BUf"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="arView" destination="8bC-Xf-vdC" id="hvU-Ek-za3"/>
+                        <outlet property="bodyAnchorPresenceLabel" destination="Poi-Dk-Amf" id="yMP-cn-9mn"/>
                         <outlet property="joints2DButton" destination="6dw-Ju-tDH" id="d5V-p6-3Hc"/>
                         <outlet property="joints3DButton" destination="O5A-j8-h8u" id="CgJ-pp-Kaj"/>
                     </connections>
