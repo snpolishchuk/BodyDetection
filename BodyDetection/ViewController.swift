@@ -1,9 +1,10 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-The sample app's main view controller.
-*/
+//
+//  ViewController.swift
+//  BodyDetection
+//
+//  Created by Oleksandr Polishchuk on 14.01.2021.
+//  Copyright © 2021 Apple. All rights reserved.
+//
 
 import UIKit
 import ARKit
@@ -113,7 +114,7 @@ extension ViewController: ARSessionDelegate {
         let defaultDefinition = ARSkeletonDefinition.defaultBody3D
         var isBodyAnchorPresent = false
         for anchor in anchors {
-            guard let bodyAnchor = anchor as? ARBodyAnchor else { continue }
+            guard anchor is ARBodyAnchor else { continue }
             
             isBodyAnchorPresent = true
             hideJoints3D()
@@ -130,7 +131,7 @@ extension ViewController: ARSessionDelegate {
     
     func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
         for anchor in anchors {
-            if let bodyAnchor = anchor as? ARBodyAnchor {
+            if anchor is ARBodyAnchor {
                 isBodyAnchorPresent = false
             }
         }
@@ -185,7 +186,7 @@ private extension ViewController {
         warningLabel.font = UIFont.preferredFont(forTextStyle: .body)
         warningLabel.textColor = .black
         warningLabel.textAlignment = .center
-        warningLabel.backgroundColor = .white
+        warningLabel.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         warningLabel.numberOfLines = 0
         warningLabel.lineBreakMode = .byWordWrapping
         
@@ -193,6 +194,6 @@ private extension ViewController {
         warningLabel.translatesAutoresizingMaskIntoConstraints = false
         warningLabel.widthAnchor.constraint(equalToConstant:  350).isActive = true
         warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 60).isActive = true
+        view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 10).isActive = true
     }
 }
