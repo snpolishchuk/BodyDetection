@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,7 +13,7 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" userLabel="ARView" customClass="ViewController" customModule="BodyDetection" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="ARView" customClass="ARView" customModule="RealityKit">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="ARView">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -75,6 +75,12 @@
                                 <color key="textColor" systemColor="systemBlueColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <arView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hZ-Ia-NJd">
+                                <rect key="frame" x="8" y="182.5" width="398" height="531"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="1hZ-Ia-NJd" secondAttribute="height" multiplier="3024:4032" id="opK-4a-lYx"/>
+                                </constraints>
+                            </arView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -82,14 +88,17 @@
                         <constraints>
                             <constraint firstItem="sDS-3y-JfY" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="4Ia-2v-q5R"/>
                             <constraint firstItem="sDS-3y-JfY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="542-LL-dxZ"/>
+                            <constraint firstItem="1hZ-Ia-NJd" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="A2P-yh-eN8"/>
+                            <constraint firstItem="1hZ-Ia-NJd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="OoW-wX-ExO"/>
                             <constraint firstItem="Poi-Dk-Amf" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="VNP-4f-OTb"/>
                             <constraint firstItem="Poi-Dk-Amf" firstAttribute="top" secondItem="iUD-zC-GUn" secondAttribute="bottom" constant="10" id="a4K-g0-Wpt"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1hZ-Ia-NJd" secondAttribute="trailing" constant="8" id="h4k-Yh-9vZ"/>
                             <constraint firstItem="iUD-zC-GUn" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="yGP-mk-psn"/>
                             <constraint firstItem="iUD-zC-GUn" firstAttribute="top" secondItem="sDS-3y-JfY" secondAttribute="bottom" constant="10" id="yzI-ct-BUf"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="arView" destination="8bC-Xf-vdC" id="hvU-Ek-za3"/>
+                        <outlet property="arView" destination="1hZ-Ia-NJd" id="8Vp-1c-i5r"/>
                         <outlet property="bodyAnchorPresenceLabel" destination="Poi-Dk-Amf" id="yMP-cn-9mn"/>
                         <outlet property="joints2DButton" destination="6dw-Ju-tDH" id="d5V-p6-3Hc"/>
                         <outlet property="joints3DButton" destination="O5A-j8-h8u" id="CgJ-pp-Kaj"/>

@@ -11,10 +11,10 @@ import ARKit
 import RealityKit
 
 class ViewController: UIViewController {
-    @IBOutlet var arView: ARView!
     @IBOutlet weak var joints2DButton: UIButton!
     @IBOutlet weak var joints3DButton: UIButton!
     @IBOutlet weak var bodyAnchorPresenceLabel: UILabel!
+    @IBOutlet var arView: ARView!
     var warningLabel: UILabel!
     
     var jointDots2D = [CAShapeLayer]()
@@ -35,12 +35,15 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        arView = ARView(frame: self.arView.frame, cameraMode: .ar, automaticallyConfigureSession: true)
+        arView.contentMode = .scaleAspectFit
         addWarningLabel()
         isBodyAnchorPresent = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         arView.session.delegate = self
 
         // If the iOS device doesn't support body tracking, raise a developer error for
@@ -55,6 +58,7 @@ class ViewController: UIViewController {
         
         // 3D Skeleton
         arView.scene.addAnchor(sphereAnchor)
+        
     }
 
     @IBAction func showJoints2D(_ sender: Any) {
