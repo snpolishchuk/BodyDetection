@@ -131,12 +131,15 @@ private extension ViewController {
         let transform = frame.displayTransform(for: .portrait, viewportSize: arView.frame.size)
         let normalizedCenter = CGPoint(x: CGFloat(skeleton.jointLandmarks[index][0]), y: CGFloat(skeleton.jointLandmarks[index][1])).applying(transform)
         let center = normalizedCenter.applying(CGAffineTransform.identity.scaledBy(x: arView.frame.width, y: arView.frame.height))
+        
         let circleWidth: CGFloat = 10
         let circleHeight: CGFloat = 10
-        let rect = CGRect(origin: CGPoint(x: center.x - circleWidth/2, y: center.y - circleHeight/2), size: CGSize(width: circleWidth, height: circleHeight))
+        let rect = CGRect(origin: CGPoint(x: center.x - circleWidth/2, y: center.y - circleHeight/2 + 165), size: CGSize(width: circleWidth, height: circleHeight))
+        
         let circleLayer = CAShapeLayer()
         circleLayer.fillColor = color.cgColor
         circleLayer.path = UIBezierPath(ovalIn: rect).cgPath
+        
         view.layer.addSublayer(circleLayer)
         jointDots2D.append(circleLayer)
     }
