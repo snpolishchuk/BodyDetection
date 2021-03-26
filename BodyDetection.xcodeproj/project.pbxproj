@@ -318,7 +318,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJFP5Z5FEA;
+				DEVELOPMENT_TEAM = 8VYRGA6MJF;
 				ENABLE_RCPROJECT_COMPILATION = YES;
 				ENABLE_USDZ_COMPILATION = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/BodyDetection/Info.plist";
@@ -327,7 +327,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.3dlook2.BodyDetection;
+				PRODUCT_BUNDLE_IDENTIFIER = me.3dlookk.BodyDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -343,7 +343,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJFP5Z5FEA;
+				DEVELOPMENT_TEAM = 8VYRGA6MJF;
 				ENABLE_RCPROJECT_COMPILATION = YES;
 				ENABLE_USDZ_COMPILATION = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/BodyDetection/Info.plist";
@@ -352,7 +352,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.3dlook2.BodyDetection;
+				PRODUCT_BUNDLE_IDENTIFIER = me.3dlookk.BodyDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;

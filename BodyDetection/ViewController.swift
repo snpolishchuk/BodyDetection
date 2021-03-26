@@ -13,7 +13,6 @@ import RealityKit
 class ViewController: UIViewController {
     @IBOutlet weak var joints2DButton: UIButton!
     @IBOutlet weak var joints3DButton: UIButton!
-    @IBOutlet weak var bodyAnchorPresenceLabel: UILabel!
     @IBOutlet var arView: ARView!
     var warningLabel: UILabel!
     
@@ -27,18 +26,11 @@ class ViewController: UIViewController {
         }
     }
     
-    private var isBodyAnchorPresent: Bool! {
-        didSet {
-            bodyAnchorPresenceLabel.text = "Body anchor presence: \(isBodyAnchorPresent!)"
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         arView = ARView(frame: self.arView.frame, cameraMode: .ar, automaticallyConfigureSession: true)
         arView.contentMode = .scaleAspectFit
         addWarningLabel()
-        isBodyAnchorPresent = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -103,7 +95,6 @@ extension ViewController: ARSessionDelegate {
 
         if !untrackedJointsAvailable {
             jointTrackWarning = "Everything is fine!"
-            isBodyAnchorPresent = true
             let configuration = ARBodyTrackingConfiguration()
             arView.session.run(configuration, options: .resetTracking)
         } else {
@@ -127,16 +118,6 @@ extension ViewController: ARSessionDelegate {
                 if joints3DButton.isSelected {
 //                    drawJointPoint3D(with: jointName, bodyAnchor: bodyAnchor)
                 }
-            }
-        }
-        
-        self.isBodyAnchorPresent = isBodyAnchorPresent
-    }
-    
-    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
-        for anchor in anchors {
-            if anchor is ARBodyAnchor {
-                isBodyAnchorPresent = false
             }
         }
     }
