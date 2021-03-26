@@ -20,6 +20,8 @@ class ViewController: UIViewController {
     var jointDots3D = [Entity]()
     let sphereAnchor = AnchorEntity()
     
+    private var bodyTrackingTimer: Timer?
+    
     private var jointTrackWarning: String? {
         didSet {
             warningLabel.text = jointTrackWarning
@@ -28,8 +30,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        arView = ARView(frame: self.arView.frame, cameraMode: .ar, automaticallyConfigureSession: true)
-        arView.contentMode = .scaleAspectFit
         addWarningLabel()
     }
     
@@ -95,12 +95,15 @@ extension ViewController: ARSessionDelegate {
 
         if !untrackedJointsAvailable {
             jointTrackWarning = "Everything is fine!"
-            let configuration = ARBodyTrackingConfiguration()
-            arView.session.run(configuration, options: .resetTracking)
+            guard bodyTrackingTimer == nil else { return } // There is already waiting timer to reset body tracking
+            
+            bodyTrackingTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] timer in
+                let configuration = ARBodyTrackingConfiguration()
+                self?.arView.session.run(configuration, options: .resetTracking)
+                self?.bodyTrackingTimer = nil
+            }
         } else {
             jointTrackWarning = "Untracked joints:\n" + untrackedJoints.joined(separator: "\n")
-            let configuration = ARBodyTrackingConfiguration()
-            arView.session.run(configuration, options: .removeExistingAnchors)
         }
     }
     
