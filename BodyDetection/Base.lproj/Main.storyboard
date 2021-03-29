@@ -75,6 +75,23 @@
                                     <constraint firstAttribute="width" secondItem="1hZ-Ia-NJd" secondAttribute="height" multiplier="3:4" id="opK-4a-lYx"/>
                                 </constraints>
                             </arView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="129" translatesAutoresizingMaskIntoConstraints="NO" id="P1H-rv-0H4">
+                                <rect key="frame" x="14.5" y="749" width="385" height="20.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Skeleton FPS: 100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TS6-Ba-ExM">
+                                        <rect key="frame" x="0.0" y="0.0" width="137.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Points FPS: 100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ghn-OE-xmC">
+                                        <rect key="frame" x="266.5" y="0.0" width="118.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -82,17 +99,23 @@
                         <constraints>
                             <constraint firstItem="sDS-3y-JfY" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="4Ia-2v-q5R"/>
                             <constraint firstItem="sDS-3y-JfY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="542-LL-dxZ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="P1H-rv-0H4" secondAttribute="bottom" id="8ZE-Ni-xSU"/>
                             <constraint firstItem="1hZ-Ia-NJd" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="A2P-yh-eN8"/>
                             <constraint firstItem="1hZ-Ia-NJd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="OoW-wX-ExO"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1hZ-Ia-NJd" secondAttribute="trailing" id="h4k-Yh-9vZ"/>
+                            <constraint firstItem="P1H-rv-0H4" firstAttribute="top" secondItem="1hZ-Ia-NJd" secondAttribute="bottom" constant="25" id="iqv-UL-535"/>
+                            <constraint firstItem="P1H-rv-0H4" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="q9r-FV-L4M"/>
                             <constraint firstItem="iUD-zC-GUn" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="yGP-mk-psn"/>
                             <constraint firstItem="iUD-zC-GUn" firstAttribute="top" secondItem="sDS-3y-JfY" secondAttribute="bottom" constant="10" id="yzI-ct-BUf"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="arView" destination="1hZ-Ia-NJd" id="8Vp-1c-i5r"/>
+                        <outlet property="fpsStackView" destination="P1H-rv-0H4" id="Pb1-cx-7LG"/>
                         <outlet property="joints2DButton" destination="6dw-Ju-tDH" id="d5V-p6-3Hc"/>
                         <outlet property="joints3DButton" destination="O5A-j8-h8u" id="CgJ-pp-Kaj"/>
+                        <outlet property="pointsFPSLabel" destination="Ghn-OE-xmC" id="Olb-28-Ac6"/>
+                        <outlet property="skeletonFPSLabel" destination="TS6-Ba-ExM" id="Gt1-xb-5sj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

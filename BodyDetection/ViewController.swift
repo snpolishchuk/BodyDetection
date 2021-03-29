@@ -14,6 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var joints2DButton: UIButton!
     @IBOutlet weak var joints3DButton: UIButton!
     @IBOutlet var arView: ARView!
+    
+    @IBOutlet weak var fpsStackView: UIStackView!
+    @IBOutlet weak var skeletonFPSLabel: UILabel!
+    @IBOutlet weak var pointsFPSLabel: UILabel!
     var warningLabel: UILabel!
     
     var jointDots2D = [CAShapeLayer]()
@@ -28,9 +32,14 @@ class ViewController: UIViewController {
         }
     }
     
+    private var skeletonFPSCounter = 0
+    private var pointsFPSCounter = 0
+    private var fpsTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addWarningLabel()
+        configureFPSTracking()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -65,6 +74,10 @@ class ViewController: UIViewController {
         joints2DButton.isSelected = false
         joints3DButton.isSelected = false
     }
+    
+    @objc private func handleDoubleTap() {
+        fpsStackView.isHidden = !fpsStackView.isHidden
+    }
 }
 
 extension ViewController: ARSessionDelegate {
@@ -72,7 +85,10 @@ extension ViewController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         let defaultDefinition = ARSkeletonDefinition.defaultBody2D
         guard let skeleton = frame.detectedBody?.skeleton else { return }
-
+        
+        // Skeleton detection FPS counting
+        skeletonFPSCounter += 1
+        
         var untrackedJointsAvailable = false
         var untrackedJoints = [String]()
         hideJoints2D()
@@ -92,6 +108,9 @@ extension ViewController: ARSessionDelegate {
                 }
             }
         }
+        
+        // Points drawing FPS counting
+        pointsFPSCounter += 1
 
         if !untrackedJointsAvailable {
             jointTrackWarning = "Everything is fine!"
@@ -186,5 +205,21 @@ private extension ViewController {
         warningLabel.widthAnchor.constraint(equalToConstant:  350).isActive = true
         warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 10).isActive = true
+    }
+    
+    func configureFPSTracking() {
+        fpsStackView.isHidden = true
+        fpsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.skeletonFPSLabel.text = "Skeleton FPS: \(self.skeletonFPSCounter)"
+            self.skeletonFPSCounter = 0
+            
+            self.pointsFPSLabel.text = "Points FPS: \(self.pointsFPSCounter)"
+            self.pointsFPSCounter = 0
+        }
+        
+        let tapGestureRecognition = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+        tapGestureRecognition.numberOfTapsRequired = 2
+        view.addGestureRecognizer(tapGestureRecognition)
     }
 }
